@@ -1,0 +1,11 @@
+{
+  "app": {
+    "name": "Lares",
+    "tagline": "Evin, nəzarət altında."
+  },
+  "health": {
+    "checking": "API yoxlanılır...",
+    "ok": "API işləyir",
+    "fail": "API əlçatmazdır"
+  }
+}

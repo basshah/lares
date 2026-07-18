@@ -1,0 +1,11 @@
+{
+  "app": {
+    "name": "Lares",
+    "tagline": "Your home, watched over."
+  },
+  "health": {
+    "checking": "Checking API...",
+    "ok": "API is up",
+    "fail": "API is unreachable"
+  }
+}

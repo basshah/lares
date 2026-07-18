@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: lares-postgres
+    environment:
+      POSTGRES_DB: lares_dev
+      POSTGRES_USER: lares
+      POSTGRES_PASSWORD: lares_dev_pw
+    ports:
+      - "5432:5432"
+    volumes:
+      - lares-pgdata:/var/lib/postgresql/data
+
+volumes:
+  lares-pgdata:
