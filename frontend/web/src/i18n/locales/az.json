@@ -7,5 +7,30 @@
     "checking": "API yoxlanılır...",
     "ok": "API işləyir",
     "fail": "API əlçatmazdır"
+  },
+  "auth": {
+    "loginTitle": "Daxil ol",
+    "loginButton": "Daxil ol",
+    "registerTitle": "Hesab yarat",
+    "registerButton": "Hesab yarat",
+    "email": "Email",
+    "password": "Şifrə",
+    "fullName": "Ad Soyad",
+    "noAccount": "Hesabın yoxdur?",
+    "registerLink": "Qeydiyyatdan keç",
+    "haveAccount": "Artıq hesabın var?",
+    "loginLink": "Daxil ol",
+    "logout": "Çıxış",
+    "errors": {
+      "INVALID_CREDENTIALS": "Email və ya şifrə yanlışdır.",
+      "EMAIL_TAKEN": "Bu email ilə hesab artıq mövcuddur.",
+      "WEAK_PASSWORD": "Şifrə ən azı 8 simvol olmalı, hərf və rəqəm içərməlidir.",
+      "INVALID_REFRESH_TOKEN": "Sessiyanın vaxtı bitib. Yenidən daxil ol.",
+      "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
+    }
+  },
+  "home": {
+    "welcome": "Xoş gəldin, {{name}}!",
+    "placeholder": "Ağıllı ev panelin burada olacaq."
   }
 }

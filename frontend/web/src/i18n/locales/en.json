@@ -7,5 +7,30 @@
     "checking": "Checking API...",
     "ok": "API is up",
     "fail": "API is unreachable"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "loginButton": "Sign in",
+    "registerTitle": "Create account",
+    "registerButton": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "noAccount": "No account yet?",
+    "registerLink": "Create one",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Sign in",
+    "logout": "Sign out",
+    "errors": {
+      "INVALID_CREDENTIALS": "Email or password is incorrect.",
+      "EMAIL_TAKEN": "An account with this email already exists.",
+      "WEAK_PASSWORD": "Password must be at least 8 characters with letters and digits.",
+      "INVALID_REFRESH_TOKEN": "Your session has expired. Please sign in again.",
+      "GENERIC": "Something went wrong. Please try again."
+    }
+  },
+  "home": {
+    "welcome": "Welcome, {{name}}!",
+    "placeholder": "Your smart home dashboard will live here."
   }
 }
