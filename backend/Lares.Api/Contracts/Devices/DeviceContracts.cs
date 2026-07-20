@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using Lares.Api.Contracts.Labels;
 using Lares.Api.Domain;
 
@@ -8,6 +9,8 @@ public record CreateDeviceRequest(
     [Required, MaxLength(100)] string Name,
     [Required] DeviceType Type,
     Guid? AreaId);
+
+public record DeviceActionRequest([Required, MaxLength(50)] string Action, JsonElement? Params);
 
 public record UpdateDeviceRequest(
     [Required, MaxLength(100)] string Name,

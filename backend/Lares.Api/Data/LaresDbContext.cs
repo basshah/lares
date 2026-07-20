@@ -14,6 +14,7 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
     public DbSet<Area> Areas => Set<Area>();
     public DbSet<Label> Labels => Set<Label>();
     public DbSet<DeviceLabel> DeviceLabels => Set<DeviceLabel>();
+    public DbSet<DeviceLog> DeviceLogs => Set<DeviceLog>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -98,6 +99,23 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
                 .WithMany()
                 .HasForeignKey(dl => dl.LabelId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<DeviceLog>(log =>
+        {
+            log.Property(l => l.Action).HasMaxLength(50);
+            log.Property(l => l.ParamsJson).HasColumnType("jsonb");
+            log.Property(l => l.Source).HasConversion<string>().HasMaxLength(20);
+
+            log.HasOne(l => l.Device)
+                .WithMany()
+                .HasForeignKey(l => l.DeviceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            log.HasOne(l => l.User)
+                .WithMany()
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
     }
 }

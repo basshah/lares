@@ -138,6 +138,47 @@ public class DevicesController(LaresDbContext db, HomeAccessService homeAccess, 
     }
 
     [Authorize]
+    [HttpPost("{id:guid}/actions")]
+    public async Task<ActionResult<DeviceDto>> PerformAction(Guid id, DeviceActionRequest request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var membership = await homeAccess.GetMembershipAsync(userId);
+        if (membership is null)
+            return NotFound(new ApiError("NOT_IN_A_HOME"));
+
+        var device = await db.Devices.Include(d => d.Area)
+            .SingleOrDefaultAsync(d => d.Id == id && d.HomeId == membership.HomeId);
+        if (device is null)
+            return NotFound(new ApiError("DEVICE_NOT_FOUND"));
+
+        (string State, DeviceAttributes Attributes) result;
+        try
+        {
+            result = connector.Execute(device, request.Action, request.Params);
+        }
+        catch (DeviceActionException ex)
+        {
+            return BadRequest(new ApiError(ex.Code));
+        }
+
+        device.State = result.State;
+        device.Attributes = result.Attributes;
+
+        db.DeviceLogs.Add(new DeviceLog
+        {
+            DeviceId = device.Id,
+            Action = request.Action,
+            ParamsJson = request.Params?.GetRawText(),
+            Source = DeviceLogSource.User,
+            UserId = userId,
+        });
+
+        await db.SaveChangesAsync();
+
+        return await BuildDeviceDtoAsync(device);
+    }
+
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
