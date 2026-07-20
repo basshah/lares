@@ -29,10 +29,6 @@
       "GENERIC": "Something went wrong. Please try again."
     }
   },
-  "home": {
-    "welcome": "Welcome, {{name}}!",
-    "placeholder": "Your smart home dashboard will live here."
-  },
   "nav": {
     "myHome": "My Home",
     "devices": "Devices",
@@ -84,6 +80,12 @@
       "Camera": "Camera",
       "Tv": "TV"
     },
+    "mode": {
+      "Off": "Off",
+      "Heat": "Heat",
+      "Cool": "Cool",
+      "Auto": "Auto"
+    },
     "edit": "Edit",
     "save": "Save",
     "cancel": "Cancel",
@@ -95,6 +97,8 @@
       "ATTRIBUTES_TYPE_MISMATCH": "Attributes don't match this device's type.",
       "DEVICE_NOT_FOUND": "Device not found.",
       "NOT_IN_A_HOME": "You don't belong to a home yet.",
+      "UNKNOWN_ACTION": "This action isn't supported for this device.",
+      "INVALID_ACTION_PARAMS": "Invalid value for that action.",
       "GENERIC": "Something went wrong. Please try again."
     }
   },
@@ -122,6 +126,25 @@
       "LABEL_NOT_FOUND": "Label not found.",
       "NOT_IN_A_HOME": "You don't belong to a home yet.",
       "GENERIC": "Something went wrong. Please try again."
+    }
+  },
+  "dashboard": {
+    "labelFilter": {
+      "all": "All labels"
+    },
+    "turnOn": "Turn on",
+    "turnOff": "Turn off",
+    "brightness": "Brightness",
+    "volume": "Volume",
+    "targetTemperature": "Target",
+    "currentTemperature": "Current",
+    "source": "Source",
+    "mode": "Mode",
+    "state": {
+      "on": "On",
+      "off": "Off",
+      "online": "Online",
+      "offline": "Offline"
     }
   }
 }

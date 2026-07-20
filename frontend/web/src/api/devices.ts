@@ -24,3 +24,6 @@ export const updateDevice = (id: string, body: UpdateDeviceBody) =>
   api.put<Device>(`/api/devices/${id}`, body).then((r) => r.data)
 
 export const deleteDevice = (id: string) => api.delete(`/api/devices/${id}`)
+
+export const performDeviceAction = (id: string, action: string, params?: Record<string, unknown>) =>
+  api.post<Device>(`/api/devices/${id}/actions`, { action, params }).then((r) => r.data)

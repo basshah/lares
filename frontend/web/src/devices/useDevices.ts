@@ -3,6 +3,7 @@ import {
   createDevice,
   deleteDevice,
   fetchDevices,
+  performDeviceAction,
   updateDevice,
   type CreateDeviceBody,
   type UpdateDeviceBody,
@@ -28,3 +29,9 @@ export const useUpdateDevice = () =>
   useInvalidateDevicesMutation(({ id, body }: { id: string; body: UpdateDeviceBody }) => updateDevice(id, body))
 
 export const useDeleteDevice = () => useInvalidateDevicesMutation((id: string) => deleteDevice(id))
+
+export const useDeviceAction = () =>
+  useInvalidateDevicesMutation(
+    ({ id, action, params }: { id: string; action: string; params?: Record<string, unknown> }) =>
+      performDeviceAction(id, action, params),
+  )

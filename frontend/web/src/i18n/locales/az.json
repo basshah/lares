@@ -29,10 +29,6 @@
       "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
     }
   },
-  "home": {
-    "welcome": "Xoş gəldin, {{name}}!",
-    "placeholder": "Ağıllı ev panelin burada olacaq."
-  },
   "nav": {
     "myHome": "Mənim Evim",
     "devices": "Cihazlar",
@@ -84,6 +80,12 @@
       "Camera": "Kamera",
       "Tv": "Televizor"
     },
+    "mode": {
+      "Off": "Söndürülüb",
+      "Heat": "İstilik",
+      "Cool": "Soyutma",
+      "Auto": "Avtomatik"
+    },
     "edit": "Redaktə et",
     "save": "Yadda saxla",
     "cancel": "Ləğv et",
@@ -95,6 +97,8 @@
       "ATTRIBUTES_TYPE_MISMATCH": "Atributlar bu cihazın tipinə uyğun deyil.",
       "DEVICE_NOT_FOUND": "Cihaz tapılmadı.",
       "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
+      "UNKNOWN_ACTION": "Bu əməliyyat bu cihaz üçün dəstəklənmir.",
+      "INVALID_ACTION_PARAMS": "Bu əməliyyat üçün dəyər yanlışdır.",
       "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
     }
   },
@@ -122,6 +126,25 @@
       "LABEL_NOT_FOUND": "Etiket tapılmadı.",
       "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
       "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
+    }
+  },
+  "dashboard": {
+    "labelFilter": {
+      "all": "Bütün etiketlər"
+    },
+    "turnOn": "Yandır",
+    "turnOff": "Söndür",
+    "brightness": "Parlaqlıq",
+    "volume": "Səs",
+    "targetTemperature": "Hədəf",
+    "currentTemperature": "Hazırkı",
+    "source": "Mənbə",
+    "mode": "Rejim",
+    "state": {
+      "on": "Açıq",
+      "off": "Bağlı",
+      "online": "Onlayn",
+      "offline": "Oflayn"
     }
   }
 }
