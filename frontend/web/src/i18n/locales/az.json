@@ -32,5 +32,39 @@
   "home": {
     "welcome": "Xoş gəldin, {{name}}!",
     "placeholder": "Ağıllı ev panelin burada olacaq."
+  },
+  "nav": {
+    "myHome": "Mənim Evim"
+  },
+  "myHome": {
+    "setup": {
+      "title": "Evini qur",
+      "createTab": "Ev yarat",
+      "joinTab": "Evə qoşul",
+      "nameLabel": "Ev adı",
+      "createButton": "Ev yarat",
+      "inviteCodeLabel": "Dəvət kodu",
+      "joinButton": "Evə qoşul"
+    },
+    "title": "Mənim Evim",
+    "inviteCode": "Dəvət kodu",
+    "copy": "Kopyala",
+    "regenerate": "Yenilə",
+    "regenerateConfirm": "Bu, cari dəvət kodunu etibarsız edəcək. Davam edilsin?",
+    "members": "Üzvlər",
+    "role": {
+      "Owner": "Sahib",
+      "Member": "Üzv"
+    },
+    "leave": "Evi tərk et",
+    "leaveConfirm": "Bu evi tərk etmək istədiyinə əminsən?",
+    "errors": {
+      "ALREADY_IN_A_HOME": "Artıq bir evə aidsən.",
+      "INVALID_INVITE_CODE": "Bu dəvət kodu etibarlı deyil.",
+      "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
+      "NOT_HOME_OWNER": "Yalnız ev sahibi bunu edə bilər.",
+      "OWNER_CANNOT_LEAVE": "Evi tərk etməzdən əvvəl sahibliyi ötür.",
+      "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
+    }
   }
 }

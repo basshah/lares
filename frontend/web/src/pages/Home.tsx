@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { api } from '../api/client'
 import { useAuth } from '../auth/AuthContext'
 
@@ -34,6 +35,12 @@ export default function Home() {
               </button>
             ))}
           </div>
+          <Link
+            to="/home"
+            className="rounded bg-slate-800 hover:bg-slate-700 px-3 py-1 text-sm transition-colors"
+          >
+            {t('nav.myHome')}
+          </Link>
           <span className="text-sm text-slate-400">{user?.fullName}</span>
           <button
             type="button"

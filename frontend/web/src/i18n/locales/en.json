@@ -32,5 +32,39 @@
   "home": {
     "welcome": "Welcome, {{name}}!",
     "placeholder": "Your smart home dashboard will live here."
+  },
+  "nav": {
+    "myHome": "My Home"
+  },
+  "myHome": {
+    "setup": {
+      "title": "Set up your home",
+      "createTab": "Create a home",
+      "joinTab": "Join a home",
+      "nameLabel": "Home name",
+      "createButton": "Create home",
+      "inviteCodeLabel": "Invite code",
+      "joinButton": "Join home"
+    },
+    "title": "My Home",
+    "inviteCode": "Invite code",
+    "copy": "Copy",
+    "regenerate": "Regenerate",
+    "regenerateConfirm": "This invalidates the current invite code. Continue?",
+    "members": "Members",
+    "role": {
+      "Owner": "Owner",
+      "Member": "Member"
+    },
+    "leave": "Leave home",
+    "leaveConfirm": "Are you sure you want to leave this home?",
+    "errors": {
+      "ALREADY_IN_A_HOME": "You already belong to a home.",
+      "INVALID_INVITE_CODE": "That invite code is not valid.",
+      "NOT_IN_A_HOME": "You don't belong to a home yet.",
+      "NOT_HOME_OWNER": "Only the home owner can do this.",
+      "OWNER_CANNOT_LEAVE": "Transfer ownership before leaving your home.",
+      "GENERIC": "Something went wrong. Please try again."
+    }
   }
 }
