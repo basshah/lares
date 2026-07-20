@@ -4,6 +4,9 @@ import RequireHome from './components/RequireHome'
 import Home from './pages/Home'
 import HomeSetup from './pages/HomeSetup'
 import MyHome from './pages/MyHome'
+import Devices from './pages/Devices'
+import Areas from './pages/Areas'
+import Labels from './pages/Labels'
 import Login from './pages/Login'
 import Register from './pages/Register'
 
@@ -17,6 +20,9 @@ function App() {
         <Route element={<RequireHome />}>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<MyHome />} />
+          <Route path="/devices" element={<Devices />} />
+          <Route path="/areas" element={<Areas />} />
+          <Route path="/labels" element={<Labels />} />
         </Route>
       </Route>
     </Routes>

@@ -41,6 +41,24 @@ export default function Home() {
           >
             {t('nav.myHome')}
           </Link>
+          <Link
+            to="/devices"
+            className="rounded bg-slate-800 hover:bg-slate-700 px-3 py-1 text-sm transition-colors"
+          >
+            {t('nav.devices')}
+          </Link>
+          <Link
+            to="/areas"
+            className="rounded bg-slate-800 hover:bg-slate-700 px-3 py-1 text-sm transition-colors"
+          >
+            {t('nav.areas')}
+          </Link>
+          <Link
+            to="/labels"
+            className="rounded bg-slate-800 hover:bg-slate-700 px-3 py-1 text-sm transition-colors"
+          >
+            {t('nav.labels')}
+          </Link>
           <span className="text-sm text-slate-400">{user?.fullName}</span>
           <button
             type="button"

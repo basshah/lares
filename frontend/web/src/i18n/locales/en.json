@@ -34,7 +34,10 @@
     "placeholder": "Your smart home dashboard will live here."
   },
   "nav": {
-    "myHome": "My Home"
+    "myHome": "My Home",
+    "devices": "Devices",
+    "areas": "Areas",
+    "labels": "Labels"
   },
   "myHome": {
     "setup": {
@@ -64,6 +67,60 @@
       "NOT_IN_A_HOME": "You don't belong to a home yet.",
       "NOT_HOME_OWNER": "Only the home owner can do this.",
       "OWNER_CANNOT_LEAVE": "Transfer ownership before leaving your home.",
+      "GENERIC": "Something went wrong. Please try again."
+    }
+  },
+  "devices": {
+    "title": "Devices",
+    "addButton": "Add device",
+    "nameLabel": "Name",
+    "typeLabel": "Type",
+    "areaLabel": "Area",
+    "noArea": "No area",
+    "type": {
+      "Light": "Light",
+      "Socket": "Socket",
+      "Thermostat": "Thermostat",
+      "Camera": "Camera",
+      "Tv": "TV"
+    },
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this device?",
+    "errors": {
+      "AREA_NOT_FOUND": "That area doesn't belong to your home.",
+      "LABEL_NOT_FOUND": "One of those labels doesn't belong to your home.",
+      "ATTRIBUTES_TYPE_MISMATCH": "Attributes don't match this device's type.",
+      "DEVICE_NOT_FOUND": "Device not found.",
+      "NOT_IN_A_HOME": "You don't belong to a home yet.",
+      "GENERIC": "Something went wrong. Please try again."
+    }
+  },
+  "areas": {
+    "title": "Areas",
+    "addPlaceholder": "New area name",
+    "add": "Add",
+    "rename": "Rename",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this area? Devices will become unassigned.",
+    "errors": {
+      "AREA_NOT_FOUND": "Area not found.",
+      "NOT_IN_A_HOME": "You don't belong to a home yet.",
+      "GENERIC": "Something went wrong. Please try again."
+    }
+  },
+  "labels": {
+    "title": "Labels",
+    "addPlaceholder": "New label name",
+    "add": "Add",
+    "rename": "Rename",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this label? It will be removed from all devices.",
+    "errors": {
+      "LABEL_NOT_FOUND": "Label not found.",
+      "NOT_IN_A_HOME": "You don't belong to a home yet.",
       "GENERIC": "Something went wrong. Please try again."
     }
   }

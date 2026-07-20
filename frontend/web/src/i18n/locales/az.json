@@ -34,7 +34,10 @@
     "placeholder": "Ağıllı ev panelin burada olacaq."
   },
   "nav": {
-    "myHome": "Mənim Evim"
+    "myHome": "Mənim Evim",
+    "devices": "Cihazlar",
+    "areas": "Otaqlar",
+    "labels": "Etiketlər"
   },
   "myHome": {
     "setup": {
@@ -64,6 +67,60 @@
       "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
       "NOT_HOME_OWNER": "Yalnız ev sahibi bunu edə bilər.",
       "OWNER_CANNOT_LEAVE": "Evi tərk etməzdən əvvəl sahibliyi ötür.",
+      "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
+    }
+  },
+  "devices": {
+    "title": "Cihazlar",
+    "addButton": "Cihaz əlavə et",
+    "nameLabel": "Ad",
+    "typeLabel": "Tip",
+    "areaLabel": "Otaq",
+    "noArea": "Otaq yoxdur",
+    "type": {
+      "Light": "İşıq",
+      "Socket": "Rozetka",
+      "Thermostat": "Termostat",
+      "Camera": "Kamera",
+      "Tv": "Televizor"
+    },
+    "edit": "Redaktə et",
+    "save": "Yadda saxla",
+    "cancel": "Ləğv et",
+    "delete": "Sil",
+    "deleteConfirm": "Bu cihaz silinsin?",
+    "errors": {
+      "AREA_NOT_FOUND": "Bu otaq sənin evinə aid deyil.",
+      "LABEL_NOT_FOUND": "Etiketlərdən biri sənin evinə aid deyil.",
+      "ATTRIBUTES_TYPE_MISMATCH": "Atributlar bu cihazın tipinə uyğun deyil.",
+      "DEVICE_NOT_FOUND": "Cihaz tapılmadı.",
+      "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
+      "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
+    }
+  },
+  "areas": {
+    "title": "Otaqlar",
+    "addPlaceholder": "Yeni otaq adı",
+    "add": "Əlavə et",
+    "rename": "Adını dəyiş",
+    "delete": "Sil",
+    "deleteConfirm": "Bu otaq silinsin? Cihazlar otaqsız qalacaq.",
+    "errors": {
+      "AREA_NOT_FOUND": "Otaq tapılmadı.",
+      "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
+      "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
+    }
+  },
+  "labels": {
+    "title": "Etiketlər",
+    "addPlaceholder": "Yeni etiket adı",
+    "add": "Əlavə et",
+    "rename": "Adını dəyiş",
+    "delete": "Sil",
+    "deleteConfirm": "Bu etiket silinsin? Bütün cihazlardan götürüləcək.",
+    "errors": {
+      "LABEL_NOT_FOUND": "Etiket tapılmadı.",
+      "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
       "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
     }
   }
