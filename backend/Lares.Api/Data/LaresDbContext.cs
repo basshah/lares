@@ -10,6 +10,10 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Home> Homes => Set<Home>();
     public DbSet<Membership> Memberships => Set<Membership>();
+    public DbSet<Device> Devices => Set<Device>();
+    public DbSet<Area> Areas => Set<Area>();
+    public DbSet<Label> Labels => Set<Label>();
+    public DbSet<DeviceLabel> DeviceLabels => Set<DeviceLabel>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -43,6 +47,56 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
             membership.HasOne(m => m.User)
                 .WithMany()
                 .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Area>(area =>
+        {
+            area.Property(a => a.Name).HasMaxLength(100);
+            area.HasOne(a => a.Home)
+                .WithMany()
+                .HasForeignKey(a => a.HomeId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Label>(label =>
+        {
+            label.Property(l => l.Name).HasMaxLength(50);
+            label.HasOne(l => l.Home)
+                .WithMany()
+                .HasForeignKey(l => l.HomeId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Device>(device =>
+        {
+            device.Property(d => d.Name).HasMaxLength(100);
+            device.Property(d => d.Type).HasConversion<string>().HasMaxLength(20);
+            device.Property(d => d.State).HasMaxLength(50);
+
+            device.HasOne(d => d.Home)
+                .WithMany()
+                .HasForeignKey(d => d.HomeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            device.HasOne(d => d.Area)
+                .WithMany()
+                .HasForeignKey(d => d.AreaId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            device.ComplexProperty(d => d.Attributes, attrs => attrs.ToJson());
+        });
+
+        builder.Entity<DeviceLabel>(deviceLabel =>
+        {
+            deviceLabel.HasIndex(dl => new { dl.DeviceId, dl.LabelId }).IsUnique();
+            deviceLabel.HasOne(dl => dl.Device)
+                .WithMany()
+                .HasForeignKey(dl => dl.DeviceId)
+                .OnDelete(DeleteBehavior.Cascade);
+            deviceLabel.HasOne(dl => dl.Label)
+                .WithMany()
+                .HasForeignKey(dl => dl.LabelId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }

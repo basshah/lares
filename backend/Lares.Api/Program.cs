@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Lares.Api.Data;
 using Lares.Api.Domain;
 using Lares.Api.Services;
@@ -9,7 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddDbContext<LaresDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
@@ -25,6 +27,8 @@ builder.Services
     .AddEntityFrameworkStores<LaresDbContext>();
 
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<HomeAccessService>();
+builder.Services.AddScoped<IDeviceConnector, SimulatedConnector>();
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

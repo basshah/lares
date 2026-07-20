@@ -4,6 +4,7 @@ using Lares.Api.Contracts.Auth;
 using Lares.Api.Contracts.Homes;
 using Lares.Api.Data;
 using Lares.Api.Domain;
+using Lares.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +13,14 @@ namespace Lares.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class HomesController(LaresDbContext db, IConfiguration configuration) : ControllerBase
+public class HomesController(LaresDbContext db, HomeAccessService homeAccess, IConfiguration configuration) : ControllerBase
 {
     [Authorize]
     [HttpPost("create")]
     public async Task<ActionResult<HomeDto>> Create(CreateHomeRequest request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        if (await GetMembershipAsync(userId) is not null)
+        if (await homeAccess.GetMembershipAsync(userId) is not null)
             return BadRequest(new ApiError("ALREADY_IN_A_HOME"));
 
         var home = new Home
@@ -39,7 +40,7 @@ public class HomesController(LaresDbContext db, IConfiguration configuration) : 
     public async Task<ActionResult<HomeDto>> Join(JoinHomeRequest request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        if (await GetMembershipAsync(userId) is not null)
+        if (await homeAccess.GetMembershipAsync(userId) is not null)
             return BadRequest(new ApiError("ALREADY_IN_A_HOME"));
 
         var code = request.InviteCode.Trim().ToUpperInvariant();
@@ -58,7 +59,7 @@ public class HomesController(LaresDbContext db, IConfiguration configuration) : 
     public async Task<ActionResult<HomeDto>> Me()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var membership = await GetMembershipAsync(userId);
+        var membership = await homeAccess.GetMembershipAsync(userId);
         if (membership is null)
             return NotFound(new ApiError("NOT_IN_A_HOME"));
 
@@ -70,7 +71,7 @@ public class HomesController(LaresDbContext db, IConfiguration configuration) : 
     public async Task<ActionResult<RegenerateInviteResponse>> RegenerateInvite()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var membership = await GetMembershipAsync(userId);
+        var membership = await homeAccess.GetMembershipAsync(userId);
         if (membership is null)
             return NotFound(new ApiError("NOT_IN_A_HOME"));
         if (membership.Role != HomeRole.Owner)
@@ -87,7 +88,7 @@ public class HomesController(LaresDbContext db, IConfiguration configuration) : 
     public async Task<IActionResult> Leave()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var membership = await GetMembershipAsync(userId);
+        var membership = await homeAccess.GetMembershipAsync(userId);
         if (membership is null)
             return NotFound(new ApiError("NOT_IN_A_HOME"));
         if (membership.Role == HomeRole.Owner)
@@ -98,9 +99,6 @@ public class HomesController(LaresDbContext db, IConfiguration configuration) : 
 
         return NoContent();
     }
-
-    private Task<Membership?> GetMembershipAsync(string userId) =>
-        db.Memberships.Include(m => m.Home).SingleOrDefaultAsync(m => m.UserId == userId);
 
     private async Task<HomeDto> BuildHomeDtoAsync(Guid homeId, string callerUserId)
     {
