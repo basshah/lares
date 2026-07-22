@@ -15,6 +15,7 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
     public DbSet<Label> Labels => Set<Label>();
     public DbSet<DeviceLabel> DeviceLabels => Set<DeviceLabel>();
     public DbSet<DeviceLog> DeviceLogs => Set<DeviceLog>();
+    public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -116,6 +117,22 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
                 .WithMany()
                 .HasForeignKey(l => l.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<ChatMessage>(msg =>
+        {
+            msg.Property(m => m.Role).HasConversion<string>().HasMaxLength(20);
+            msg.HasIndex(m => new { m.HomeId, m.UserId, m.CreatedAtUtc });
+
+            msg.HasOne(m => m.Home)
+                .WithMany()
+                .HasForeignKey(m => m.HomeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            msg.HasOne(m => m.User)
+                .WithMany()
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

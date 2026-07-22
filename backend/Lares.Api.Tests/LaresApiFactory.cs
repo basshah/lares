@@ -1,7 +1,11 @@
 using Lares.Api.Data;
+using Lares.Api.Services;
+using Lares.Api.Tests.Fakes;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Testcontainers.PostgreSql;
 
 namespace Lares.Api.Tests;
@@ -18,6 +22,13 @@ public class LaresApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         builder.UseSetting("ConnectionStrings:Default", _postgres.GetConnectionString());
         builder.UseSetting("Jwt:Key", "lares-test-signing-key-0123456789-abcdefghijk");
+        builder.UseSetting("Gemini:ApiKey", "test-key-unused");
+
+        builder.ConfigureTestServices(services =>
+        {
+            services.RemoveAll<IAiClient>();
+            services.AddScoped<IAiClient, FakeAiClient>();
+        });
     }
 
     public async Task InitializeAsync()

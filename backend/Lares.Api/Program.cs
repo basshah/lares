@@ -33,6 +33,16 @@ builder.Services.AddScoped<IDeviceConnector, SimulatedConnector>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<DeviceHubNotifier>();
 
+if (string.IsNullOrWhiteSpace(builder.Configuration["Gemini:ApiKey"]))
+{
+    throw new InvalidOperationException(
+        "Gemini:ApiKey is not configured. In development: " +
+        "dotnet user-secrets set \"Gemini:ApiKey\" \"<key>\" --project backend/Lares.Api");
+}
+
+builder.Services.AddHttpClient<IAiClient, GeminiClient>();
+builder.Services.AddScoped<IAiChatService, AiChatService>();
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
