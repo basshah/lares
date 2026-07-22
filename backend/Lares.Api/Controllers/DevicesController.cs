@@ -13,7 +13,11 @@ namespace Lares.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DevicesController(LaresDbContext db, HomeAccessService homeAccess, IDeviceConnector connector) : ControllerBase
+public class DevicesController(
+    LaresDbContext db,
+    HomeAccessService homeAccess,
+    IDeviceConnector connector,
+    DeviceHubNotifier hubNotifier) : ControllerBase
 {
     [Authorize]
     [HttpPost]
@@ -41,6 +45,7 @@ public class DevicesController(LaresDbContext db, HomeAccessService homeAccess, 
         };
         db.Devices.Add(device);
         await db.SaveChangesAsync();
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
 
         return await BuildDeviceDtoAsync(device);
     }
@@ -134,6 +139,7 @@ public class DevicesController(LaresDbContext db, HomeAccessService homeAccess, 
         await db.SaveChangesAsync();
 
         device = await db.Devices.Include(d => d.Area).SingleAsync(d => d.Id == device.Id);
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
         return await BuildDeviceDtoAsync(device);
     }
 
@@ -174,6 +180,7 @@ public class DevicesController(LaresDbContext db, HomeAccessService homeAccess, 
         });
 
         await db.SaveChangesAsync();
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
 
         return await BuildDeviceDtoAsync(device);
     }
@@ -193,6 +200,7 @@ public class DevicesController(LaresDbContext db, HomeAccessService homeAccess, 
 
         db.Devices.Remove(device);
         await db.SaveChangesAsync();
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
 
         return NoContent();
     }

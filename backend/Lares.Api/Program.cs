@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Lares.Api.Data;
 using Lares.Api.Domain;
+using Lares.Api.Hubs;
 using Lares.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +30,8 @@ builder.Services
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<HomeAccessService>();
 builder.Services.AddScoped<IDeviceConnector, SimulatedConnector>();
+builder.Services.AddSignalR();
+builder.Services.AddScoped<DeviceHubNotifier>();
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -44,6 +47,20 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
             ClockSkew = TimeSpan.FromSeconds(30),
+        };
+
+        // WebSocket upgrades can't carry a custom Authorization header, so SignalR
+        // sends the JWT via ?access_token= instead — pick it up here for /hubs/* requests.
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                    context.Token = accessToken;
+                return Task.CompletedTask;
+            },
         };
     });
 
@@ -76,6 +93,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<DeviceHub>("/hubs/devices");
 
 app.Run();
 

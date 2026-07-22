@@ -12,7 +12,7 @@ namespace Lares.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class LabelsController(LaresDbContext db, HomeAccessService homeAccess) : ControllerBase
+public class LabelsController(LaresDbContext db, HomeAccessService homeAccess, DeviceHubNotifier hubNotifier) : ControllerBase
 {
     [Authorize]
     [HttpPost]
@@ -26,6 +26,7 @@ public class LabelsController(LaresDbContext db, HomeAccessService homeAccess) :
         var label = new Label { HomeId = membership.HomeId, Name = request.Name.Trim() };
         db.Labels.Add(label);
         await db.SaveChangesAsync();
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
 
         return new LabelDto(label.Id, label.Name);
     }
@@ -63,6 +64,7 @@ public class LabelsController(LaresDbContext db, HomeAccessService homeAccess) :
 
         label.Name = request.Name.Trim();
         await db.SaveChangesAsync();
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
 
         return new LabelDto(label.Id, label.Name);
     }
@@ -82,6 +84,7 @@ public class LabelsController(LaresDbContext db, HomeAccessService homeAccess) :
 
         db.Labels.Remove(label);
         await db.SaveChangesAsync();
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
 
         return NoContent();
     }

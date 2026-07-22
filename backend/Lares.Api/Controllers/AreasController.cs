@@ -12,7 +12,7 @@ namespace Lares.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AreasController(LaresDbContext db, HomeAccessService homeAccess) : ControllerBase
+public class AreasController(LaresDbContext db, HomeAccessService homeAccess, DeviceHubNotifier hubNotifier) : ControllerBase
 {
     [Authorize]
     [HttpPost]
@@ -26,6 +26,7 @@ public class AreasController(LaresDbContext db, HomeAccessService homeAccess) : 
         var area = new Area { HomeId = membership.HomeId, Name = request.Name.Trim() };
         db.Areas.Add(area);
         await db.SaveChangesAsync();
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
 
         return new AreaDto(area.Id, area.Name, 0, area.CreatedAtUtc);
     }
@@ -70,6 +71,7 @@ public class AreasController(LaresDbContext db, HomeAccessService homeAccess) : 
 
         area.Name = request.Name.Trim();
         await db.SaveChangesAsync();
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
 
         var deviceCount = await db.Devices.CountAsync(d => d.AreaId == area.Id);
         return new AreaDto(area.Id, area.Name, deviceCount, area.CreatedAtUtc);
@@ -90,6 +92,7 @@ public class AreasController(LaresDbContext db, HomeAccessService homeAccess) : 
 
         db.Areas.Remove(area);
         await db.SaveChangesAsync();
+        await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);
 
         return NoContent();
     }
