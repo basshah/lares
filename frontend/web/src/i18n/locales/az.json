@@ -146,5 +146,16 @@
       "online": "Onlayn",
       "offline": "Oflayn"
     }
+  },
+  "chat": {
+    "toggle": "💬",
+    "title": "Ev Assistenti",
+    "placeholder": "Evin haqqında soruş...",
+    "send": "Göndər",
+    "thinking": "Düşünür...",
+    "errors": {
+      "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
+      "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
+    }
   }
 }

@@ -146,5 +146,16 @@
       "online": "Online",
       "offline": "Offline"
     }
+  },
+  "chat": {
+    "toggle": "💬",
+    "title": "Home Assistant",
+    "placeholder": "Ask about your home...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "errors": {
+      "NOT_IN_A_HOME": "You don't belong to a home yet.",
+      "GENERIC": "Something went wrong. Please try again."
+    }
   }
 }

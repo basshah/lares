@@ -8,6 +8,7 @@ import { useDevices } from '../devices/useDevices'
 import { badgeIcon, badgeValue } from '../devices/badges'
 import DeviceCard from '../devices/cards/DeviceCard'
 import type { Device } from '../devices/types'
+import ChatPanel from '../chat/components/ChatPanel'
 
 const NO_AREA = '__none__'
 
@@ -145,6 +146,8 @@ export default function Home() {
           </section>
         ))}
       </main>
+
+      <ChatPanel />
     </div>
   )
 }
