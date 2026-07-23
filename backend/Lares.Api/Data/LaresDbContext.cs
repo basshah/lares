@@ -16,6 +16,8 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
     public DbSet<DeviceLabel> DeviceLabels => Set<DeviceLabel>();
     public DbSet<DeviceLog> DeviceLogs => Set<DeviceLog>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+    public DbSet<Scene> Scenes => Set<Scene>();
+    public DbSet<SceneStep> SceneSteps => Set<SceneStep>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -132,6 +134,32 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
             msg.HasOne(m => m.User)
                 .WithMany()
                 .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Scene>(scene =>
+        {
+            scene.Property(s => s.Name).HasMaxLength(100);
+            scene.HasOne(s => s.Home)
+                .WithMany()
+                .HasForeignKey(s => s.HomeId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<SceneStep>(step =>
+        {
+            step.Property(s => s.Action).HasMaxLength(50);
+            step.Property(s => s.ParamsJson).HasColumnType("jsonb");
+            step.HasIndex(s => new { s.SceneId, s.Order });
+
+            step.HasOne(s => s.Scene)
+                .WithMany(s => s.Steps)
+                .HasForeignKey(s => s.SceneId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            step.HasOne(s => s.Device)
+                .WithMany()
+                .HasForeignKey(s => s.DeviceId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }

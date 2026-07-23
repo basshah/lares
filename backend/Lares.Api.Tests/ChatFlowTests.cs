@@ -6,6 +6,7 @@ using Lares.Api.Contracts.Auth;
 using Lares.Api.Contracts.Chat;
 using Lares.Api.Contracts.Devices;
 using Lares.Api.Contracts.Homes;
+using Lares.Api.Contracts.Scenes;
 using Lares.Api.Data;
 using Lares.Api.Domain;
 using Microsoft.AspNetCore.Http.Connections;
@@ -172,5 +173,33 @@ public class ChatFlowTests(LaresApiFactory factory) : IClassFixture<LaresApiFact
             .Content.ReadFromJsonAsync<List<ChatMessageDto>>(JsonOptions))!;
 
         Assert.Empty(historyB);
+    }
+
+    [Fact]
+    public async Task SendMessage_RunSceneMarker_ExecutesSceneAndUpdatesDevices()
+    {
+        var (token, userId) = await RegisterWithHomeAsync();
+        var device = await CreateDeviceAsync(token, DeviceType.Light);
+
+        var sceneResponse = await SendAsync(HttpMethod.Post, "/api/scenes", token,
+            new CreateSceneRequest("Chat-triggered scene", [new SceneStepRequest(device.Id, "turnOn", null)]));
+        sceneResponse.EnsureSuccessStatusCode();
+        var scene = (await sceneResponse.Content.ReadFromJsonAsync<SceneDto>(JsonOptions))!;
+
+        var sceneArgs = JsonSerializer.Serialize(new { sceneId = scene.Id });
+        var response = await SendAsync(HttpMethod.Post, "/api/chat/messages", token,
+            new SendChatMessageRequest($"RUN_SCENE:{sceneArgs}"));
+        response.EnsureSuccessStatusCode();
+        var reply = (await response.Content.ReadFromJsonAsync<ChatMessageDto>(JsonOptions))!;
+        Assert.Equal("Done.", reply.Content);
+
+        using var scope = factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<LaresDbContext>();
+        var updatedDevice = await db.Devices.SingleAsync(d => d.Id == device.Id);
+        Assert.Equal("on", updatedDevice.State);
+
+        var log = await db.DeviceLogs.SingleAsync(l => l.DeviceId == device.Id);
+        Assert.Equal(DeviceLogSource.Scene, log.Source);
+        Assert.Equal(userId, log.UserId);
     }
 }

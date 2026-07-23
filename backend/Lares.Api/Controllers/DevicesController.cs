@@ -157,27 +157,9 @@ public class DevicesController(
         if (device is null)
             return NotFound(new ApiError("DEVICE_NOT_FOUND"));
 
-        (string State, DeviceAttributes Attributes) result;
-        try
-        {
-            result = connector.Execute(device, request.Action, request.Params);
-        }
-        catch (DeviceActionException ex)
-        {
-            return BadRequest(new ApiError(ex.Code));
-        }
-
-        device.State = result.State;
-        device.Attributes = result.Attributes;
-
-        db.DeviceLogs.Add(new DeviceLog
-        {
-            DeviceId = device.Id,
-            Action = request.Action,
-            ParamsJson = request.Params?.GetRawText(),
-            Source = DeviceLogSource.User,
-            UserId = userId,
-        });
+        var result = DeviceActionExecutor.Execute(db, connector, device, request.Action, request.Params, DeviceLogSource.User, userId);
+        if (!result.Success)
+            return BadRequest(new ApiError(result.ErrorCode!));
 
         await db.SaveChangesAsync();
         await hubNotifier.NotifyHomeChangedAsync(membership.HomeId);

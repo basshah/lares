@@ -44,6 +44,20 @@ public class AiChatService(
             required = new[] { "deviceId", "action" },
         }));
 
+    private static readonly AiToolDefinition RunSceneTool = new(
+        Name: "run_scene",
+        Description: "Run a named scene (a preset group of device actions, e.g. \"Movie night\") in the user's home. " +
+                      "Always use a sceneId from the home state listed in the system instruction — never invent one.",
+        ParametersSchema: JsonSerializer.SerializeToElement(new
+        {
+            type = "OBJECT",
+            properties = new
+            {
+                sceneId = new { type = "STRING", description = "The id (GUID) of the scene to run, from the home state." },
+            },
+            required = new[] { "sceneId" },
+        }));
+
     public async Task<IReadOnlyList<ChatMessage>> GetHistoryAsync(Guid homeId, string userId, CancellationToken ct = default) =>
         await db.ChatMessages
             .Where(m => m.HomeId == homeId && m.UserId == userId)
@@ -66,7 +80,7 @@ public class AiChatService(
         for (var iteration = 0; iteration < MaxToolIterations; iteration++)
         {
             var completion = await aiClient.CompleteAsync(
-                new AiCompletionRequest(Model, systemInstruction, conversation, [PerformDeviceActionTool]), ct);
+                new AiCompletionRequest(Model, systemInstruction, conversation, [PerformDeviceActionTool, RunSceneTool]), ct);
 
             var functionCalls = completion.Content.OfType<AiFunctionCallBlock>().ToList();
             var text = string.Concat(completion.Content.OfType<AiTextBlock>().Select(b => b.Text));
@@ -93,10 +107,17 @@ public class AiChatService(
         return assistantRow;
     }
 
-    private async Task<AiContentBlock> ExecuteToolAsync(Guid homeId, string userId, AiFunctionCallBlock call, CancellationToken ct)
+    private Task<AiContentBlock> ExecuteToolAsync(Guid homeId, string userId, AiFunctionCallBlock call, CancellationToken ct) =>
+        call.Name switch
+        {
+            "perform_device_action" => ExecutePerformDeviceActionAsync(homeId, userId, call, ct),
+            "run_scene" => ExecuteRunSceneAsync(homeId, userId, call, ct),
+            _ => Task.FromResult<AiContentBlock>(new AiFunctionResultBlock(call.Name, "Unknown tool.")),
+        };
+
+    private async Task<AiContentBlock> ExecutePerformDeviceActionAsync(Guid homeId, string userId, AiFunctionCallBlock call, CancellationToken ct)
     {
-        if (call.Name != "perform_device_action" ||
-            !call.Args.TryGetProperty("deviceId", out var deviceIdProp) ||
+        if (!call.Args.TryGetProperty("deviceId", out var deviceIdProp) ||
             !Guid.TryParse(deviceIdProp.GetString(), out var deviceId) ||
             !call.Args.TryGetProperty("action", out var actionProp))
             return new AiFunctionResultBlock(call.Name, "Invalid tool call.");
@@ -110,41 +131,53 @@ public class AiChatService(
         if (device is null)
             return new AiFunctionResultBlock(call.Name, "Device not found in this home.");
 
-        (string State, DeviceAttributes Attributes) result;
-        try
-        {
-            result = connector.Execute(device, action, actionParams);
-        }
-        catch (DeviceActionException ex)
-        {
-            return new AiFunctionResultBlock(call.Name, $"Action failed: {ex.Code}");
-        }
+        var result = DeviceActionExecutor.Execute(db, connector, device, action, actionParams, DeviceLogSource.Ai, userId);
+        if (!result.Success)
+            return new AiFunctionResultBlock(call.Name, $"Action failed: {result.ErrorCode}");
 
-        device.State = result.State;
-        device.Attributes = result.Attributes;
-        db.DeviceLogs.Add(new DeviceLog
-        {
-            DeviceId = device.Id,
-            Action = action,
-            ParamsJson = actionParams?.GetRawText(),
-            Source = DeviceLogSource.Ai,
-            UserId = userId,
-        });
         await db.SaveChangesAsync(ct);
         await hubNotifier.NotifyHomeChangedAsync(homeId);
 
-        return new AiFunctionResultBlock(call.Name, $"{device.Name} is now {result.State}.");
+        return new AiFunctionResultBlock(call.Name, $"{device.Name} is now {device.State}.");
+    }
+
+    private async Task<AiContentBlock> ExecuteRunSceneAsync(Guid homeId, string userId, AiFunctionCallBlock call, CancellationToken ct)
+    {
+        if (!call.Args.TryGetProperty("sceneId", out var sceneIdProp) || !Guid.TryParse(sceneIdProp.GetString(), out var sceneId))
+            return new AiFunctionResultBlock(call.Name, "Invalid tool call.");
+
+        var scene = await db.Scenes
+            .Include(s => s.Steps).ThenInclude(s => s.Device)
+            .SingleOrDefaultAsync(s => s.Id == sceneId && s.HomeId == homeId, ct);
+        if (scene is null)
+            return new AiFunctionResultBlock(call.Name, "Scene not found in this home.");
+
+        var succeeded = 0;
+        foreach (var step in scene.Steps.OrderBy(s => s.Order))
+        {
+            var actionParams = step.ParamsJson is null ? (JsonElement?)null : JsonDocument.Parse(step.ParamsJson).RootElement;
+            var result = DeviceActionExecutor.Execute(db, connector, step.Device, step.Action, actionParams, DeviceLogSource.Scene, userId);
+            if (result.Success)
+                succeeded++;
+        }
+
+        await db.SaveChangesAsync(ct);
+        await hubNotifier.NotifyHomeChangedAsync(homeId);
+
+        return new AiFunctionResultBlock(call.Name, $"Ran scene '{scene.Name}': {succeeded}/{scene.Steps.Count} actions succeeded.");
     }
 
     private async Task<string> BuildSystemInstructionAsync(Guid homeId, CancellationToken ct)
     {
         var devices = await db.Devices.Include(d => d.Area).Where(d => d.HomeId == homeId).OrderBy(d => d.Name).ToListAsync(ct);
         var labels = await db.Labels.Where(l => l.HomeId == homeId).OrderBy(l => l.Name).Select(l => l.Name).ToListAsync(ct);
+        var scenes = await db.Scenes.Include(s => s.Steps).Where(s => s.HomeId == homeId).OrderBy(s => s.Name).ToListAsync(ct);
 
         var sb = new StringBuilder();
         sb.AppendLine("You are the Lares smart-home assistant. You may ONLY discuss this home, its devices, areas, " +
-                       "and their state, and take device actions on the user's behalf via the perform_device_action tool. " +
-                       "If asked about anything unrelated to this home, politely decline and steer back to home topics.");
+                       "and their state, and take device actions on the user's behalf via the perform_device_action tool " +
+                       "or the run_scene tool. If asked about anything unrelated to this home, politely decline and steer " +
+                       "back to home topics.");
         sb.AppendLine();
         sb.AppendLine("Current home state:");
         sb.AppendLine("Devices:");
@@ -153,6 +186,13 @@ public class AiChatService(
 
         if (labels.Count > 0)
             sb.AppendLine($"Labels: {string.Join(", ", labels)}");
+
+        if (scenes.Count > 0)
+        {
+            sb.AppendLine("Scenes:");
+            foreach (var s in scenes)
+                sb.AppendLine($"- id: {s.Id}, name: \"{s.Name}\" ({s.Steps.Count} step(s))");
+        }
 
         return sb.ToString();
     }

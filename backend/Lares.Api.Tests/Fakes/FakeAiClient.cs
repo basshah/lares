@@ -25,6 +25,13 @@ public sealed class FakeAiClient : IAiClient
                 [new AiFunctionCallBlock("perform_device_action", args)]));
         }
 
+        if (lastUserText.StartsWith("RUN_SCENE:", StringComparison.Ordinal))
+        {
+            var args = JsonSerializer.Deserialize<JsonElement>(lastUserText["RUN_SCENE:".Length..]);
+            return Task.FromResult(new AiCompletion("STOP",
+                [new AiFunctionCallBlock("run_scene", args)]));
+        }
+
         if (lastUserText.Contains("OFFTOPIC", StringComparison.OrdinalIgnoreCase))
             return Task.FromResult(new AiCompletion("STOP",
                 [new AiTextBlock("I can only help with your home and its devices.")]));
