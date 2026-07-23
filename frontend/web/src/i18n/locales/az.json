@@ -33,7 +33,8 @@
     "myHome": "Mənim Evim",
     "devices": "Cihazlar",
     "areas": "Otaqlar",
-    "labels": "Etiketlər"
+    "labels": "Etiketlər",
+    "scenes": "Səhnələr"
   },
   "myHome": {
     "setup": {
@@ -124,6 +125,34 @@
     "deleteConfirm": "Bu etiket silinsin? Bütün cihazlardan götürüləcək.",
     "errors": {
       "LABEL_NOT_FOUND": "Etiket tapılmadı.",
+      "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
+      "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
+    }
+  },
+  "scenes": {
+    "title": "Səhnələr",
+    "nameLabel": "Ad",
+    "addPlaceholder": "Yeni səhnə adı",
+    "add": "Əlavə et",
+    "edit": "Redaktə et",
+    "save": "Yadda saxla",
+    "cancel": "Ləğv et",
+    "delete": "Sil",
+    "deleteConfirm": "Bu səhnə silinsin?",
+    "run": "İşə sal",
+    "addStep": "Addım əlavə et",
+    "removeStep": "Sil",
+    "action": {
+      "turnOn": "Yandır",
+      "turnOff": "Söndür",
+      "setBrightness": "Parlaqlığı təyin et",
+      "setTargetTemperature": "Hədəf temperaturu təyin et",
+      "setMode": "Rejimi təyin et",
+      "setVolume": "Səsi təyin et"
+    },
+    "errors": {
+      "SCENE_NOT_FOUND": "Səhnə tapılmadı.",
+      "DEVICE_NOT_FOUND": "Cihazlardan biri sənin evinə aid deyil.",
       "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
       "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
     }

@@ -9,6 +9,7 @@ import { badgeIcon, badgeValue } from '../devices/badges'
 import DeviceCard from '../devices/cards/DeviceCard'
 import type { Device } from '../devices/types'
 import ChatPanel from '../chat/components/ChatPanel'
+import { useRunScene, useScenes } from '../scenes/useScenes'
 
 const NO_AREA = '__none__'
 
@@ -19,6 +20,8 @@ export default function Home() {
   const { data: devices } = useDevices()
   const { data: areas } = useAreas()
   const { data: labels } = useLabels()
+  const { data: scenes } = useScenes()
+  const runScene = useRunScene()
 
   const [selectedLabelId, setSelectedLabelId] = useState('')
 
@@ -95,6 +98,12 @@ export default function Home() {
           >
             {t('nav.labels')}
           </Link>
+          <Link
+            to="/scenes"
+            className="rounded bg-slate-800 hover:bg-slate-700 px-3 py-1 text-sm transition-colors"
+          >
+            {t('nav.scenes')}
+          </Link>
           <span className="text-sm text-slate-400">{user?.fullName}</span>
           <button
             type="button"
@@ -133,6 +142,22 @@ export default function Home() {
               </option>
             ))}
           </select>
+        )}
+
+        {scenes && scenes.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {scenes.map((scene) => (
+              <button
+                key={scene.id}
+                type="button"
+                onClick={() => runScene.mutate(scene.id)}
+                disabled={runScene.isPending}
+                className="shrink-0 rounded-full bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-400 px-3 py-1 text-xs whitespace-nowrap disabled:opacity-50 transition-colors"
+              >
+                ▶ {scene.name}
+              </button>
+            ))}
+          </div>
         )}
 
         {groups.map((group) => (

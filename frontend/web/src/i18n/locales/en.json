@@ -33,7 +33,8 @@
     "myHome": "My Home",
     "devices": "Devices",
     "areas": "Areas",
-    "labels": "Labels"
+    "labels": "Labels",
+    "scenes": "Scenes"
   },
   "myHome": {
     "setup": {
@@ -124,6 +125,34 @@
     "deleteConfirm": "Delete this label? It will be removed from all devices.",
     "errors": {
       "LABEL_NOT_FOUND": "Label not found.",
+      "NOT_IN_A_HOME": "You don't belong to a home yet.",
+      "GENERIC": "Something went wrong. Please try again."
+    }
+  },
+  "scenes": {
+    "title": "Scenes",
+    "nameLabel": "Name",
+    "addPlaceholder": "New scene name",
+    "add": "Add",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this scene?",
+    "run": "Run",
+    "addStep": "Add step",
+    "removeStep": "Remove",
+    "action": {
+      "turnOn": "Turn on",
+      "turnOff": "Turn off",
+      "setBrightness": "Set brightness",
+      "setTargetTemperature": "Set target temperature",
+      "setMode": "Set mode",
+      "setVolume": "Set volume"
+    },
+    "errors": {
+      "SCENE_NOT_FOUND": "Scene not found.",
+      "DEVICE_NOT_FOUND": "One of those devices doesn't belong to your home.",
       "NOT_IN_A_HOME": "You don't belong to a home yet.",
       "GENERIC": "Something went wrong. Please try again."
     }
