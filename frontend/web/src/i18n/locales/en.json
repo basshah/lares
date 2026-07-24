@@ -34,7 +34,8 @@
     "devices": "Devices",
     "areas": "Areas",
     "labels": "Labels",
-    "scenes": "Scenes"
+    "scenes": "Scenes",
+    "automations": "Automations"
   },
   "myHome": {
     "setup": {
@@ -153,6 +154,51 @@
     "errors": {
       "SCENE_NOT_FOUND": "Scene not found.",
       "DEVICE_NOT_FOUND": "One of those devices doesn't belong to your home.",
+      "NOT_IN_A_HOME": "You don't belong to a home yet.",
+      "GENERIC": "Something went wrong. Please try again."
+    }
+  },
+  "automations": {
+    "title": "Automations",
+    "nameLabel": "Name",
+    "addPlaceholder": "New automation name",
+    "add": "Add",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this automation?",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "runNow": "Test run",
+    "trigger": {
+      "typeLabel": "Trigger",
+      "typeTime": "Time",
+      "typeDeviceState": "Device state",
+      "timeLabel": "Time of day",
+      "daysLabel": "Days (none = every day)",
+      "deviceLabel": "Device",
+      "stateLabel": "When state becomes"
+    },
+    "deviceState": {
+      "idle": "Idle",
+      "heating": "Heating",
+      "cooling": "Cooling",
+      "auto": "Auto"
+    },
+    "day": {
+      "Monday": "Mon",
+      "Tuesday": "Tue",
+      "Wednesday": "Wed",
+      "Thursday": "Thu",
+      "Friday": "Fri",
+      "Saturday": "Sat",
+      "Sunday": "Sun"
+    },
+    "errors": {
+      "AUTOMATION_NOT_FOUND": "Automation not found.",
+      "DEVICE_NOT_FOUND": "One of those devices doesn't belong to your home.",
+      "INVALID_TRIGGER": "Trigger configuration is incomplete.",
       "NOT_IN_A_HOME": "You don't belong to a home yet.",
       "GENERIC": "Something went wrong. Please try again."
     }

@@ -104,6 +104,12 @@ export default function Home() {
           >
             {t('nav.scenes')}
           </Link>
+          <Link
+            to="/automations"
+            className="rounded bg-slate-800 hover:bg-slate-700 px-3 py-1 text-sm transition-colors"
+          >
+            {t('nav.automations')}
+          </Link>
           <span className="text-sm text-slate-400">{user?.fullName}</span>
           <button
             type="button"

@@ -8,6 +8,7 @@ import Devices from './pages/Devices'
 import Areas from './pages/Areas'
 import Labels from './pages/Labels'
 import Scenes from './pages/Scenes'
+import Automations from './pages/Automations'
 import Login from './pages/Login'
 import Register from './pages/Register'
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/areas" element={<Areas />} />
           <Route path="/labels" element={<Labels />} />
           <Route path="/scenes" element={<Scenes />} />
+          <Route path="/automations" element={<Automations />} />
         </Route>
       </Route>
     </Routes>

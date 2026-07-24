@@ -6,6 +6,7 @@ import { devicesQueryKey } from '../devices/useDevices'
 import { areasQueryKey } from '../areas/useAreas'
 import { labelsQueryKey } from '../labels/useLabels'
 import { scenesQueryKey } from '../scenes/useScenes'
+import { automationsQueryKey } from '../automations/useAutomations'
 
 export function useDeviceHubConnection(enabled: boolean) {
   const queryClient = useQueryClient()
@@ -25,6 +26,7 @@ export function useDeviceHubConnection(enabled: boolean) {
       queryClient.invalidateQueries({ queryKey: areasQueryKey })
       queryClient.invalidateQueries({ queryKey: labelsQueryKey })
       queryClient.invalidateQueries({ queryKey: scenesQueryKey })
+      queryClient.invalidateQueries({ queryKey: automationsQueryKey })
     })
 
     connection.start().catch((err: unknown) => console.error('SignalR connection failed', err))

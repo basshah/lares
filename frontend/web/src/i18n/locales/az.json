@@ -34,7 +34,8 @@
     "devices": "Cihazlar",
     "areas": "Otaqlar",
     "labels": "Etiketlər",
-    "scenes": "Səhnələr"
+    "scenes": "Səhnələr",
+    "automations": "Avtomasiyalar"
   },
   "myHome": {
     "setup": {
@@ -153,6 +154,51 @@
     "errors": {
       "SCENE_NOT_FOUND": "Səhnə tapılmadı.",
       "DEVICE_NOT_FOUND": "Cihazlardan biri sənin evinə aid deyil.",
+      "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
+      "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
+    }
+  },
+  "automations": {
+    "title": "Avtomasiyalar",
+    "nameLabel": "Ad",
+    "addPlaceholder": "Yeni avtomasiya adı",
+    "add": "Əlavə et",
+    "edit": "Redaktə et",
+    "save": "Yadda saxla",
+    "cancel": "Ləğv et",
+    "delete": "Sil",
+    "deleteConfirm": "Bu avtomasiya silinsin?",
+    "enabled": "Aktiv",
+    "disabled": "Deaktiv",
+    "runNow": "Sına",
+    "trigger": {
+      "typeLabel": "Trigger",
+      "typeTime": "Zaman",
+      "typeDeviceState": "Cihaz vəziyyəti",
+      "timeLabel": "Saat",
+      "daysLabel": "Günlər (heç biri = hər gün)",
+      "deviceLabel": "Cihaz",
+      "stateLabel": "Vəziyyət bu olanda"
+    },
+    "deviceState": {
+      "idle": "Boşdur",
+      "heating": "İstiləşir",
+      "cooling": "Soyuyur",
+      "auto": "Avtomatik"
+    },
+    "day": {
+      "Monday": "B.e",
+      "Tuesday": "Ç.a",
+      "Wednesday": "Ç",
+      "Thursday": "C.a",
+      "Friday": "C",
+      "Saturday": "Ş",
+      "Sunday": "B"
+    },
+    "errors": {
+      "AUTOMATION_NOT_FOUND": "Avtomasiya tapılmadı.",
+      "DEVICE_NOT_FOUND": "Cihazlardan biri sənin evinə aid deyil.",
+      "INVALID_TRIGGER": "Trigger konfiqurasiyası tamamlanmayıb.",
       "NOT_IN_A_HOME": "Hələ heç bir evə aid deyilsən.",
       "GENERIC": "Xəta baş verdi. Yenidən cəhd et."
     }
