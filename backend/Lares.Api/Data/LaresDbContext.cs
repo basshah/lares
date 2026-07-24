@@ -18,6 +18,8 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public DbSet<Scene> Scenes => Set<Scene>();
     public DbSet<SceneStep> SceneSteps => Set<SceneStep>();
+    public DbSet<Automation> Automations => Set<Automation>();
+    public DbSet<AutomationStep> AutomationSteps => Set<AutomationStep>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -155,6 +157,41 @@ public class LaresDbContext(DbContextOptions<LaresDbContext> options)
             step.HasOne(s => s.Scene)
                 .WithMany(s => s.Steps)
                 .HasForeignKey(s => s.SceneId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            step.HasOne(s => s.Device)
+                .WithMany()
+                .HasForeignKey(s => s.DeviceId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Automation>(automation =>
+        {
+            automation.Property(a => a.Name).HasMaxLength(100);
+            automation.Property(a => a.TriggerType).HasConversion<string>().HasMaxLength(20);
+            automation.Property(a => a.TriggerDaysOfWeekCsv).HasMaxLength(64);
+            automation.Property(a => a.TriggerState).HasMaxLength(50);
+
+            automation.HasOne(a => a.Home)
+                .WithMany()
+                .HasForeignKey(a => a.HomeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            automation.HasOne(a => a.TriggerDevice)
+                .WithMany()
+                .HasForeignKey(a => a.TriggerDeviceId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<AutomationStep>(step =>
+        {
+            step.Property(s => s.Action).HasMaxLength(50);
+            step.Property(s => s.ParamsJson).HasColumnType("jsonb");
+            step.HasIndex(s => new { s.AutomationId, s.Order });
+
+            step.HasOne(s => s.Automation)
+                .WithMany(a => a.Steps)
+                .HasForeignKey(s => s.AutomationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             step.HasOne(s => s.Device)

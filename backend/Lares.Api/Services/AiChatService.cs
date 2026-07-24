@@ -131,7 +131,7 @@ public class AiChatService(
         if (device is null)
             return new AiFunctionResultBlock(call.Name, "Device not found in this home.");
 
-        var result = DeviceActionExecutor.Execute(db, connector, device, action, actionParams, DeviceLogSource.Ai, userId);
+        var result = await DeviceActionExecutor.ExecuteAsync(db, connector, device, action, actionParams, DeviceLogSource.Ai, userId, ct);
         if (!result.Success)
             return new AiFunctionResultBlock(call.Name, $"Action failed: {result.ErrorCode}");
 
@@ -156,7 +156,7 @@ public class AiChatService(
         foreach (var step in scene.Steps.OrderBy(s => s.Order))
         {
             var actionParams = step.ParamsJson is null ? (JsonElement?)null : JsonDocument.Parse(step.ParamsJson).RootElement;
-            var result = DeviceActionExecutor.Execute(db, connector, step.Device, step.Action, actionParams, DeviceLogSource.Scene, userId);
+            var result = await DeviceActionExecutor.ExecuteAsync(db, connector, step.Device, step.Action, actionParams, DeviceLogSource.Scene, userId, ct);
             if (result.Success)
                 succeeded++;
         }
@@ -172,12 +172,16 @@ public class AiChatService(
         var devices = await db.Devices.Include(d => d.Area).Where(d => d.HomeId == homeId).OrderBy(d => d.Name).ToListAsync(ct);
         var labels = await db.Labels.Where(l => l.HomeId == homeId).OrderBy(l => l.Name).Select(l => l.Name).ToListAsync(ct);
         var scenes = await db.Scenes.Include(s => s.Steps).Where(s => s.HomeId == homeId).OrderBy(s => s.Name).ToListAsync(ct);
+        var automations = await db.Automations.Include(a => a.Steps).Include(a => a.TriggerDevice)
+            .Where(a => a.HomeId == homeId).OrderBy(a => a.Name).ToListAsync(ct);
 
         var sb = new StringBuilder();
         sb.AppendLine("You are the Lares smart-home assistant. You may ONLY discuss this home, its devices, areas, " +
                        "and their state, and take device actions on the user's behalf via the perform_device_action tool " +
                        "or the run_scene tool. If asked about anything unrelated to this home, politely decline and steer " +
-                       "back to home topics.");
+                       "back to home topics. You may also see a list of Automations (self-triggering rules based on " +
+                       "time or device state) — these are informational only; you cannot create, edit, enable/disable, " +
+                       "or run them, only answer questions about them.");
         sb.AppendLine();
         sb.AppendLine("Current home state:");
         sb.AppendLine("Devices:");
@@ -192,6 +196,18 @@ public class AiChatService(
             sb.AppendLine("Scenes:");
             foreach (var s in scenes)
                 sb.AppendLine($"- id: {s.Id}, name: \"{s.Name}\" ({s.Steps.Count} step(s))");
+        }
+
+        if (automations.Count > 0)
+        {
+            sb.AppendLine("Automations (self-triggering, read-only to you):");
+            foreach (var a in automations)
+            {
+                var trigger = a.TriggerType == AutomationTriggerType.Time
+                    ? $"time {a.TriggerTimeOfDay:HH\\:mm}" + (a.TriggerDaysOfWeekCsv is null ? " every day" : $" on {a.TriggerDaysOfWeekCsv}")
+                    : $"when \"{a.TriggerDevice?.Name}\" becomes {a.TriggerState}";
+                sb.AppendLine($"- \"{a.Name}\" ({(a.IsEnabled ? "enabled" : "disabled")}): trigger = {trigger}, {a.Steps.Count} step(s)");
+            }
         }
 
         return sb.ToString();

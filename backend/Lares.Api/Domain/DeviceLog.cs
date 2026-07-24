@@ -5,6 +5,7 @@ public enum DeviceLogSource
     User,
     Ai,
     Scene,
+    Automation,
 }
 
 public class DeviceLog

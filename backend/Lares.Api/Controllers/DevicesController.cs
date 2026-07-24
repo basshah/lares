@@ -157,7 +157,7 @@ public class DevicesController(
         if (device is null)
             return NotFound(new ApiError("DEVICE_NOT_FOUND"));
 
-        var result = DeviceActionExecutor.Execute(db, connector, device, request.Action, request.Params, DeviceLogSource.User, userId);
+        var result = await DeviceActionExecutor.ExecuteAsync(db, connector, device, request.Action, request.Params, DeviceLogSource.User, userId);
         if (!result.Success)
             return BadRequest(new ApiError(result.ErrorCode!));
 

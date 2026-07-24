@@ -42,6 +42,7 @@ if (string.IsNullOrWhiteSpace(builder.Configuration["Gemini:ApiKey"]))
 
 builder.Services.AddHttpClient<IAiClient, GeminiClient>();
 builder.Services.AddScoped<IAiChatService, AiChatService>();
+builder.Services.AddHostedService<AutomationSchedulerService>();
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -144,7 +144,7 @@ public class ScenesController(
         foreach (var step in scene.Steps.OrderBy(s => s.Order))
         {
             var actionParams = ParseParams(step.ParamsJson);
-            var result = DeviceActionExecutor.Execute(db, connector, step.Device, step.Action, actionParams, DeviceLogSource.Scene, userId);
+            var result = await DeviceActionExecutor.ExecuteAsync(db, connector, step.Device, step.Action, actionParams, DeviceLogSource.Scene, userId);
             results.Add(new SceneStepResultDto(step.DeviceId, step.Device.Name, step.Action, result.Success, result.ErrorCode));
         }
 

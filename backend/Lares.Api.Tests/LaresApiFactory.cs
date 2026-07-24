@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Testcontainers.PostgreSql;
 
 namespace Lares.Api.Tests;
@@ -28,6 +29,10 @@ public class LaresApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         {
             services.RemoveAll<IAiClient>();
             services.AddScoped<IAiClient, FakeAiClient>();
+            // The real time-based scheduler runs on a 30s wall-clock loop, which would make tests
+            // both slow and racy. Tests call AutomationSchedulerService.RunOnceAsync(...) directly
+            // for deterministic control instead.
+            services.RemoveAll<IHostedService>();
         });
     }
 
